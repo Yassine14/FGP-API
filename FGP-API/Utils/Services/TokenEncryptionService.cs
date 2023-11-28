@@ -1,22 +1,21 @@
-﻿using System;
+﻿
 using System.Text;
 using System.Security.Cryptography;
-using Microsoft.AspNetCore.Identity;
+using FGP_API.Utils.Helpers;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace FGP_API.Utils.Services
-{ 
-    public class TokenEncryptionService
+{
+    public class TokenEncryptionService(IConfiguration configuration)
     {
-        private readonly IConfiguration _configuration; 
-        public TokenEncryptionService(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
-        
+        private readonly IConfiguration _configuration = configuration;
+
         public string EncryptToken(string token)
         {
             using var aes = Aes.Create();
-            aes.Key = Encoding.UTF8.GetBytes(_configuration.GetRequiredSection("JWT:TokenEncryptionKey").Value);
+            aes.Key = Encoding.UTF8.GetBytes(_configuration.GetRequiredSection("JWT:TokenEncryptionKey").Value ?? "");
             aes.IV = new byte[16]; // Initialization Vector - for simplicity, set to all zeros; in practice, generate a unique IV for each token
 
             using var encryptor = aes.CreateEncryptor(aes.Key, aes.IV);
@@ -38,7 +37,7 @@ namespace FGP_API.Utils.Services
         public string DecryptToken(string encryptedToken)
         {
             using var aes = Aes.Create();
-            aes.Key = Encoding.UTF8.GetBytes(_configuration["JWT:TokenEncryptionKey"]);
+            aes.Key = Encoding.UTF8.GetBytes(_configuration["JWT:TokenEncryptionKey"] ?? "");
             aes.IV = new byte[16]; // Initialization Vector - for simplicity, set to all zeros; in practice, should match the IV used during encryption
 
             using var decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
@@ -51,34 +50,42 @@ namespace FGP_API.Utils.Services
             return reader.ReadToEnd();
         }
 
-        //private bool HasValidTokenForUser(string userId, string purpose, int tokenValidityDurationMinutes)
-        //{
-        //    string existingToken = GetTokenForUser(userId, purpose);
 
-        //    // If no token found for the user, or it's expired, return false
-        //    if (string.IsNullOrEmpty(existingToken))
-        //    {
-        //        return false;
-        //    }
+        /// <summary>
+        /// Verify If Token is expired
+        /// </summary> 
+        /// <returns></returns>
+        public bool IsExpired(string token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenObject = tokenHandler.ReadJwtToken(DecryptToken(token));
+            if (tokenObject != null && tokenObject.ValidTo < DateTime.Now)
+                return true;
 
-        //    // Check token expiration
-        //    //DateTime tokenCreatedAt = /* Get the creation time of the token from your storage */
-        //    //DateTime expirationTime = tokenCreatedAt.AddHours(tokenValidityDurationMinutes);
+            return false;
+        }
 
-        //    // If the current time is before the expiration time, the token is considered valid
-             
-        //}
+        public string GenerateNewEncrytedToken(List<Claim> authClaims)
+        {
+            var issuerSigningKey = _configuration?["JWT:IssuerSigningKey"];
+            var validIssuer = _configuration?["JWT:ValidIssuer"];
+            var validAudience = _configuration?["JWT:ValidAudience"];
 
-        //public string GetTokenForUser(string userId, string purpose)
-        //{
-        //    // Code to retrieve the token for the specified user and purpose from your storage
-        //    // Return the token or null if not found or expired
+            var authSignInKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(issuerSigningKey ?? ""));
 
-        //    var token = _userManager.toke
-        //    .FirstOrDefault(t => t.UserId == userId && t.Name == purpose);
+            var jwtSecurityToken = new JwtSecurityToken(
+                issuer: validIssuer,
+                audience: validAudience,
+                expires: DateTime.Now.AddHours(1),
+                claims: authClaims,
+                signingCredentials: new SigningCredentials(authSignInKey, SecurityAlgorithms.HmacSha256)
+                );
 
-        //    return token?.Value;
-        //}
+            var Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
+
+            return EncryptToken(Token);
+        }
+
     }
 
 }

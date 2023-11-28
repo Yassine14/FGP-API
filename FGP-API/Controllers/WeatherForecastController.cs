@@ -1,4 +1,4 @@
-using FGP_API.Authentification;
+using FGP_API.Models.Authentification;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

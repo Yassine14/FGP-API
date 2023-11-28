@@ -4,6 +4,7 @@ using FGP_API.Utils.Helpers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FGP_API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231128005919_FGPModelsV11")]
+    partial class FGPModelsV11
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -179,7 +182,7 @@ namespace FGP_API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AppUsers", (string)null);
+                    b.ToTable("AppUsers");
                 });
 
             modelBuilder.Entity("FGP_API.Models.DAO.Game", b =>
@@ -286,7 +289,7 @@ namespace FGP_API.Migrations
 
                     b.HasIndex("VenueId");
 
-                    b.ToTable("Games", (string)null);
+                    b.ToTable("Games");
                 });
 
             modelBuilder.Entity("FGP_API.Models.DAO.GameActivity", b =>
@@ -322,7 +325,7 @@ namespace FGP_API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("GameActivities", (string)null);
+                    b.ToTable("GameActivities");
                 });
 
             modelBuilder.Entity("FGP_API.Models.DAO.GameComment", b =>
@@ -353,7 +356,7 @@ namespace FGP_API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("GameComment", (string)null);
+                    b.ToTable("GameComment");
                 });
 
             modelBuilder.Entity("FGP_API.Models.DAO.GameParticipant", b =>
@@ -388,7 +391,7 @@ namespace FGP_API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("GameParticipants", (string)null);
+                    b.ToTable("GameParticipants");
                 });
 
             modelBuilder.Entity("FGP_API.Models.DAO.GamePlayerNonAppearance", b =>
@@ -408,7 +411,7 @@ namespace FGP_API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("NonAppearances", (string)null);
+                    b.ToTable("NonAppearances");
                 });
 
             modelBuilder.Entity("FGP_API.Models.DAO.GameReview", b =>
@@ -446,7 +449,7 @@ namespace FGP_API.Migrations
 
                     b.HasIndex("GameReviewerId");
 
-                    b.ToTable("GameReviews", (string)null);
+                    b.ToTable("GameReviews");
                 });
 
             modelBuilder.Entity("FGP_API.Models.DAO.Notification", b =>
@@ -476,7 +479,7 @@ namespace FGP_API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Notifications", (string)null);
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("FGP_API.Models.DAO.Pitch", b =>
@@ -506,7 +509,7 @@ namespace FGP_API.Migrations
 
                     b.HasIndex("VenueId");
 
-                    b.ToTable("Pitchs", (string)null);
+                    b.ToTable("Pitchs");
                 });
 
             modelBuilder.Entity("FGP_API.Models.DAO.Team", b =>
@@ -544,7 +547,7 @@ namespace FGP_API.Migrations
 
                     b.HasIndex("AdminId");
 
-                    b.ToTable("Teams", (string)null);
+                    b.ToTable("Teams");
                 });
 
             modelBuilder.Entity("FGP_API.Models.DAO.TeamMessage", b =>
@@ -579,7 +582,7 @@ namespace FGP_API.Migrations
 
                     b.HasIndex("TeamId");
 
-                    b.ToTable("TeamMessages", (string)null);
+                    b.ToTable("TeamMessages");
                 });
 
             modelBuilder.Entity("FGP_API.Models.DAO.TeamPlayer", b =>
@@ -610,7 +613,7 @@ namespace FGP_API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("TeamPlayers", (string)null);
+                    b.ToTable("TeamPlayers");
                 });
 
             modelBuilder.Entity("FGP_API.Models.DAO.TeamRequest", b =>
@@ -648,7 +651,7 @@ namespace FGP_API.Migrations
 
                     b.HasIndex("TeamId");
 
-                    b.ToTable("TeamRequests", (string)null);
+                    b.ToTable("TeamRequests");
                 });
 
             modelBuilder.Entity("FGP_API.Models.DAO.Tournament", b =>
@@ -688,7 +691,7 @@ namespace FGP_API.Migrations
 
                     b.HasIndex("WiningTeamId");
 
-                    b.ToTable("Tournaments", (string)null);
+                    b.ToTable("Tournaments");
                 });
 
             modelBuilder.Entity("FGP_API.Models.DAO.TournamentTeam", b =>
@@ -707,7 +710,7 @@ namespace FGP_API.Migrations
 
                     b.HasIndex("TeamId");
 
-                    b.ToTable("TournamentTeam", (string)null);
+                    b.ToTable("TournamentTeam");
                 });
 
             modelBuilder.Entity("FGP_API.Models.DAO.UserMessage", b =>
@@ -742,7 +745,7 @@ namespace FGP_API.Migrations
 
                     b.HasIndex("SenderId");
 
-                    b.ToTable("UserMessage", (string)null);
+                    b.ToTable("UserMessage");
                 });
 
             modelBuilder.Entity("FGP_API.Models.DAO.UserNotification", b =>
@@ -779,7 +782,7 @@ namespace FGP_API.Migrations
                     b.HasIndex("FGPUserId")
                         .IsUnique();
 
-                    b.ToTable("UserNotifications", (string)null);
+                    b.ToTable("UserNotifications");
                 });
 
             modelBuilder.Entity("FGP_API.Models.DAO.UserReview", b =>
@@ -814,7 +817,7 @@ namespace FGP_API.Migrations
 
                     b.HasIndex("ReviewerUserId");
 
-                    b.ToTable("UserReviews", (string)null);
+                    b.ToTable("UserReviews");
                 });
 
             modelBuilder.Entity("FGP_API.Models.DAO.Venue", b =>
@@ -877,7 +880,7 @@ namespace FGP_API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Venues", (string)null);
+                    b.ToTable("Venues");
                 });
 
             modelBuilder.Entity("FGP_API.Models.DAO.VenueReview", b =>
@@ -914,7 +917,7 @@ namespace FGP_API.Migrations
 
                     b.HasIndex("VenueReviewerId");
 
-                    b.ToTable("VenueReviews", (string)null);
+                    b.ToTable("VenueReviews");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
